@@ -103,17 +103,29 @@ void userOptions(char *uname)
 			updatePost(nameArray, name2Array);
 			break;
 		case 9:
+			printf("enter postname\n");
+			scanf("%s", name2Array);
+			savePost(name2Array);
 			break;
 		case 10:
+			strcpy(message->senderName, uname);
+			printf("enter reciever username\n");
+			scanf("%s", message->recieverName);
+			printf("enter message\n");
+			scanf("%s", message->message);
+			addMessage(message);
 			break;
 		case 11:
+			getAllMessages(uname);
 			break;
 		case 12:
+			
 			printf("enter postname\n");
 			scanf("%s", nameArray);
-			viewComment(uname, nameArray);
+			viewComment(nameArray);
 			break;
 		case 13:
+			deleteComment(uname);
 			break;
 		case 14:
 			printf("successfully logged out\n");

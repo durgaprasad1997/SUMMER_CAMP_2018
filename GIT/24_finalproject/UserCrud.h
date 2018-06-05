@@ -36,40 +36,42 @@ struct User * getUser(char *name)
 				return  user;
 			}
 
-			fseek(fp, sizeof(struct MetaData), SEEK_CUR);
+			
 
 
 		}
 		else if (metadata->dataType == 2)
 		{
 			fseek(fp, sizeof(struct Post), SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData), SEEK_CUR);
-
+			
 
 
 		}
 		else if (metadata->dataType == 3)
 		{
 			fseek(fp, sizeof(struct Comment), SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData), SEEK_CUR);
-
+			
 
 		}
 		else if (metadata->dataType == 4)
 		{
 			fseek(fp, sizeof(struct Message), SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData), SEEK_CUR);
-
+			
 
 		}
 		else if (metadata->dataType == -1)
 		{
 			fseek(fp, sizeof(metadata->size), SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData), SEEK_CUR);
+			
+		}
+		if (fread(metadata, sizeof(struct MetaData), 1, fp) <= 0)
+		{
+			return NULL;
 		}
 	
 	}
-	
+	fflush(fp);
+	fclose(fp);
 	return NULL;
 
 }
@@ -145,6 +147,8 @@ void updateUser(struct User *user2)
 		
 	}
 	printf("no such user\n");
+	fflush(fp);
+	fclose(fp);
 	return ;
 }
 
@@ -247,6 +251,8 @@ void removeUser(char *name)
 		current = ftell(fp);
 	}
 	printf("no such user\n");
+	fflush(fp);
+	fclose(fp);
 	return;
 
 }
@@ -280,14 +286,13 @@ bool login(char *name,char *password)
 				return true;
 			}
 
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
+		
 
 		}
 		else if (metadata->dataType == 2)
 		{
 			fseek(fp, sizeof(struct Post) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+			
 
 
 
@@ -295,64 +300,75 @@ bool login(char *name,char *password)
 		else if (metadata->dataType == 3)
 		{
 			fseek(fp, sizeof(struct Comment) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+			
 
 
 		}
 		else if (metadata->dataType == 4)
 		{
 			fseek(fp, sizeof(struct Message) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+			
 
 
 		}
 		else if (metadata->dataType == -1)
 		{
 			fseek(fp, sizeof(metadata->size) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-		}
 		
-	}
+		}
 
+		if (fread(metadata, sizeof(struct MetaData), 1, fp) <= 0)
+		{
+
+			fclose(fp);
+			return false;
+		}
+	}
+	fflush(fp);
+	
 	fclose(fp);
 	return false;
 }
 
 void addPost(struct Post *post)
 {
-	FILE *fp = fopen("Database.bin", "ab");
+	FILE *fp = fopen("Database.bin", "ab+");
 
 	struct MetaData *metadata = (struct MetaData *)malloc(sizeof(struct MetaData));
 	metadata->dataType = 2;
 	metadata->size = sizeof(struct Post);
 	fwrite(metadata, sizeof(struct MetaData), 1, fp);
 	fwrite(post, sizeof(struct Post), 1, fp);
+	fflush(fp);
+	fclose(fp);
 
 }
 
 
 void addComment(struct Comment *comment)
 {
-	FILE *fp = fopen("Database.bin", "ab");
+	FILE *fp = fopen("Database.bin", "ab+");
 
 	struct MetaData *metadata = (struct MetaData *)malloc(sizeof(struct MetaData));
 	metadata->dataType = 3;
 	metadata->size = sizeof(struct Comment);
 	fwrite(metadata, sizeof(struct MetaData), 1, fp);
 	fwrite(comment, sizeof(struct Comment), 1, fp);
-
+	fflush(fp);
+	fclose(fp);
 }
 
 void addMessage(struct Message *message)
 {
-	FILE *fp = fopen("Database.bin", "ab");
+	FILE *fp = fopen("Database.bin", "ab+");
 
 	struct MetaData *metadata = (struct MetaData *)malloc(sizeof(struct MetaData));
 	metadata->dataType = 4;
 	metadata->size = sizeof(struct Message);
 	fwrite(metadata, sizeof(struct MetaData), 1, fp);
 	fwrite(message, sizeof(struct Message), 1, fp);
-
+	fflush(fp);
+	fclose(fp);
 }
 
 
@@ -407,6 +423,8 @@ void likePost(char  *postname)
 
 
 	}
+	fflush(fp);
+	fclose(fp);
 	printf("no such post\n");
 	return;
 }
@@ -459,6 +477,8 @@ void removePost(char *username, char *postname)
 		current = ftell(fp);
 	}
 	printf("no such post\n");
+	fflush(fp);
+	fclose(fp);
 	return;
 }
 
@@ -513,6 +533,8 @@ void updatePost(char  *postname,char *newMessage)
 
 
 	}
+	fflush(fp);
+	fclose(fp);
 	printf("no such post\n");
 	return;
 }
@@ -546,24 +568,18 @@ void getAllMessages(char *name)
 		{
 			
 			fseek(fp, sizeof(struct User) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
+			
 
 		}
 		else if (metadata->dataType == 2)
 		{
 			fseek(fp, sizeof(struct Post) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
-
-
+		
 		}
 		else if (metadata->dataType == 3)
 		{
 			fseek(fp, sizeof(struct Comment) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
-
+			
 		}
 		else if (metadata->dataType == 4)
 		{
@@ -573,16 +589,14 @@ void getAllMessages(char *name)
 			if (!strcmp(message->recieverName, name))
 				printf("sender-----%s\nmessage----%s\n", message->senderName, message->message);
 
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
-
+		
 		}
 		else if (metadata->dataType == -1)
 		{
 			fseek(fp, sizeof(metadata->size) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+			
 		}
-		if (fread(metadata, sizeof(struct MetaData), 1, fp) == 0)
+		if (fread(metadata, sizeof(struct MetaData), 1, fp) <= 0)
 			break;
 	}
 	printf("no such username\n");
@@ -590,7 +604,7 @@ void getAllMessages(char *name)
 
 }
 
-void viewComment(char *name,char *postname)
+void viewComment(char *postname)
 {
 
 	FILE *fp = fopen("Database.bin", "rb");
@@ -609,15 +623,13 @@ void viewComment(char *name,char *postname)
 		{
 			
 			fseek(fp, sizeof(struct User) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
+			
 
 		}
 		else if (metadata->dataType == 2)
 		{
 			fseek(fp, sizeof(struct Post) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
+			
 
 
 		}
@@ -625,25 +637,24 @@ void viewComment(char *name,char *postname)
 		{
 			struct Comment *comment = (struct Comment*)malloc(sizeof(struct Comment));
 			fread(comment, sizeof(struct Comment), 1, fp);
-			if (!strcmp(comment->userName, name) && !strcmp(comment->postName, postname))
+			if (!strcmp(comment->postName, postname))
 			{
 				printf("%s  %s\n", comment->commentorName, comment->commentMsg);
+				return;
 			}
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+		
 
 
 		}
 		else if (metadata->dataType == 4)
 		{
 			fseek(fp, sizeof(struct Message) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
-
-
+		
 		}
 		else if (metadata->dataType == -1)
 		{
 			fseek(fp, sizeof(metadata->size) , SEEK_CUR);
-			fseek(fp, sizeof(struct MetaData) , SEEK_CUR);
+		
 		}
 		if (fread(metadata, sizeof(struct MetaData), 1, fp) <= 0)
 			break;
@@ -651,7 +662,13 @@ void viewComment(char *name,char *postname)
 	printf("no such user\n");
 	return;
 }
+
 void deleteComment(char *name)
+{
+
+}
+
+void savePost(char *postname)
 {
 
 }
