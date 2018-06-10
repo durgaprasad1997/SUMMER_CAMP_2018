@@ -1,0 +1,55 @@
+
+Model.objects.all()
+
+Model.objects.values('column_name1',...)
+
+Model.objects.values_list('column_name1',...)
+
+Model.objects.filter(condition)//Similar to where in sql queries
+
+Model.objects.filter().count()//Similar to count in sql queries
+
+
+College.objects.order_by('-acronym')
+(or)
+College.objects.values_list('name','acronym').order_by('-acronym')
+(or)
+College.objects.filter().order_by('-acronym')
+
+
+College.objects.values_list('name').order_by('-location')[:5]
+
+
+from django.db.models import Count,Min,Max
+College.objects.values('location').annotate(Count('location'))
+
+
+MockTest1.objects.aggregate(min_score=Min('problem1'))
+
+
+//Sorting based on count
+c=College.objects.values('location').annotate(count=Count('location')).order_by('count')
+
+
+
+
+College.objects.filter(student__dropped_out=True).distinct()
+
+Student.objects.filter(dropped_out=True).values('college__name').distinct()
+
+Student.objects.filter(college__acronym='cvr').values('name')
+
+Student.objects.values('college__name').annotate(count=count('name'))
+
+
+Student.objects.values('college__name').annotate(cou=Count('name')).order_by('cou')
+
+
+Student.objects.values('name','college__acronym')
+
+
+//All colleges with >10 students and sort ascending
+College.objects.values('name').annotate(c=Count('student__id')).filter(c__gt=10).order_by('c')
+
+//Get student_name,college_name and total_marks
+MockTest1.objects.values('student__name','student__college__acronym','total')
