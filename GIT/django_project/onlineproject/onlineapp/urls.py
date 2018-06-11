@@ -6,10 +6,21 @@ from .views import *
 app_name="onlineapp"
 
 urlpatterns = [
+    path('colleges/',CollegeView.as_view(),name = 'colleges'),
+
     path('colleges/add_college/', CreateCollegeView.as_view(),name='add_college'),
-    path('colleges/add_student/', CreateStudentView.as_view(),name='add_student'),
+    path('colleges/<str:Acronym>/add_student/', CreateStudentView.as_view(),name='add_student'),
+
+
     path('colleges/<str:Acronym>/',CollegeDetailView.as_view(),name='College_Acronym'),
-    path('colleges/',CollegeView.as_view(),name="colleges_html"),
+    path('colleges/<int:pk>/delete/',DeleteCollegeView.as_view(),name='college_delete'),
+    path('colleges/<int:pk>/edit/', UpdateCollegeView.as_view(), name='college_edit'),
+
+
+    path('colleges/<str:Acronym>/<int:pk>/edit/', UpdateStudentView.as_view(), name='student_edit'),
+
+    path('colleges/<str:Acronym>/<int:pk>/delete/',DeleteStudentView.as_view(),name='student_delete'),
+
     path('exceptionsession/', backup_views.exceptiontest),
     path('testsession/', backup_views.testSession),
     path('studentmarks/', backup_views.queryMarks),
