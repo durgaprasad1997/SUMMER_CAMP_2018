@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>College Form</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="col-xs-6 col-xs-offset-3">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset>
+                <legend>Add credit</legend>
+                <div class="form-group">
+                    <label for="{{ form.Name.id_for_label }}">Enter friendly Name</label>
+                    {{ form.friendly_name }}</div>
+                <div class="from-group">
+                    <label for="{{ form.Location.id_for_label}}">Enter cardname</label>
+                    {{ form.cardname }}
+                </div>
+                <div class="from-group">
+                    <label for="{{ form.Acronym.id_for_label}}">Enter cvv</label>
+                    {{ form.cvv}}
+                </div>
+                 <div class="from-group">
+                    <label for="{{ form.Contact.id_for_label}}">Enter cardtype</label>
+                    {{ form.cardtype}}
+                </div>
+                 <div class="from-group">
+                    <label for="{{ form.Contact.id_for_label}}">Enter cardnumber</label>
+                    {{ form.cardnumber}}
+                </div>
+                 <div class="from-group">
+                    <label for="{{ form.Contact.id_for_label}}">Enter expiry</label>
+                    {{ form.expiry}}
+                </div>
+                <input type="submit" value="submit">
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

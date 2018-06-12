@@ -1,0 +1,41 @@
+{%extends 'base.html'%}
+
+
+{% block content %}
+<div class="container">
+
+     <a href="{% url 'credit:logout' %}" class="btn btn-success">logout</a>
+
+      <a href="add_credit/" class="btn btn-success">Add credit card</a>
+
+
+
+<table border="2" style="background-color:yellow" class="table table-bordered">
+
+    <tr>
+         <th>id</th>
+        <th>friendly name</th>
+        <th>cardname</th>
+        <th>cvv</th>
+         <th>cardtype</th>
+         <th>cardnumber</th>
+         <th>expiry</th>
+
+    </tr>
+
+{% for k in credit %}
+    <tr>
+   {% for i in k.values %}
+
+        <td>{{ i }} </td>
+    {% endfor %}
+    <td><a href="./{{ k.id }}/edit/">Edit</a>|<a href="./{{ k.id }}/delete/">Delete</a></td>
+
+    </tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+{%endblock %}
