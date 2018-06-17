@@ -49,12 +49,12 @@ def createdb(ctx):
     print("clearing daata")
 
 
-
     schemaName = settings.DATABASES['default']['NAME']
     db = MySQLdb.connect("localhost", "root", "mysql")
     cursor = db.cursor()
     q = "CREATE SCHEMA IF NOT EXISTS "+schemaName
     cursor.execute(q)
+
 
     os.system("python manage.py makemigrations")
     os.system("python manage.py migrate")
@@ -187,12 +187,12 @@ def populatedb(ctx):
 
 if __name__=='__main__':
 
-    #cli(obj={})
+    cli(obj={})
 
 
-    manager = Colleges.objects
-    querySets = Colleges.objects.all()
-    print(querySets)
-    for querySet in querySets:
-        print(querySet)
+    # manager = Colleges.objects
+    # querySets = Colleges.objects.all()
+    # print(querySets)
+    # for querySet in querySets:
+    #     print(querySet)
 
